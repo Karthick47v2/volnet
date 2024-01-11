@@ -1,6 +1,6 @@
 "use server"
 
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 import { CheckoutOrderParams, CreateOrderParams, GetOrdersByEventParams, GetOrdersByUserParams } from "@/types"
 import { redirect } from 'next/navigation';
 import { handleError } from '../utils';
@@ -9,36 +9,54 @@ import Order from '../database/models/order.model';
 import Event from '../database/models/event.model';
 import {ObjectId} from 'mongodb';
 import User from '../database/models/user.model';
+import { v4 as uuidv4 } from 'uuid';
+// import { NextResponse } from 'next/server'
 
 export const checkoutOrder = async (order: CheckoutOrderParams) => {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-  const price = order.isFree ? 0 : Number(order.price) * 100;
+  // const price = order.isFree ? 0 : Number(order.price) * 100;
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            unit_amount: price,
-            product_data: {
-              name: order.eventTitle
-            }
-          },
-          quantity: 1
-        },
-      ],
-      metadata: {
-        eventId: order.eventId,
-        buyerId: order.buyerId,
-      },
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
-    });
+    // const session = await stripe.checkout.sessions.create({
+    //   line_items: [
+    //     {
+    //       price_data: {
+    //         currency: 'usd',
+    //         unit_amount: price,
+    //         product_data: {
+    //           name: order.eventTitle
+    //         }
+    //       },
+    //       quantity: 1
+    //     },
+    //   ],
+    //   metadata: {
+    //     eventId: order.eventId,
+    //     buyerId: order.buyerId,
+    //   },
+    //   mode: 'payment',
+    //   success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
+    //   cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
+    // });
 
-    redirect(session.url!)
+    console.log(order.buyerId)
+
+    const new_order = {
+      stripeId: uuidv4() as string,
+      eventId: order.eventId || '',
+      buyerId: order.buyerId || '',
+      totalAmount: '0',
+      createdAt: new Date(),
+    }
+
+    const newOrder = await createOrder(new_order)
+    // return NextResponse.json({ message: 'OK', order: newOrder })
+
+    // console.log()
+
+    // redirect(session.url!)
+    redirect(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile`)
   } catch (error) {
     throw error;
   }
@@ -67,6 +85,8 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
 
     if (!eventId) throw new Error('Event ID is required')
     const eventObjectId = new ObjectId(eventId)
+
+    console.log(eventObjectId)
 
     const orders = await Order.aggregate([
       {
@@ -98,9 +118,7 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
           createdAt: 1,
           eventTitle: '$event.title',
           eventId: '$event._id',
-          buyer: {
-            $concat: ['$buyer.firstName', ' ', '$buyer.lastName'],
-          },
+          buyer: '$buyer.username',
         },
       },
       {
