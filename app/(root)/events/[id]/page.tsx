@@ -23,7 +23,7 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
 
   const orders = await getOrdersByUser({ userId, page: searchParams.page as string})
 
-  const isEventJoined = orders!.data.some((order) => order.buyer === userId);
+  const isEventJoined = orders!.data.some((order: any) => order.buyer === userId);
 
   console.log(userId)
 
