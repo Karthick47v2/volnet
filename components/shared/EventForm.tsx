@@ -47,11 +47,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues
   })
+
+  
  
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
     let uploadedImageUrl = values.imageUrl;
 
     if(files.length > 0) {
+      
       const uploadedImages = await startUpload(files)
 
       if(!uploadedImages) {
@@ -251,7 +254,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             />
         </div>
 
-        <div className="flex flex-col gap-5 md:flex-row">
+        {/* <div className="flex flex-col gap-5 md:flex-row">
             <FormField
               control={form.control}
               name="price"
@@ -292,8 +295,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />   
-           <FormField
+            />    */}
+           {/* <FormField
               control={form.control}
               name="url"
               render={({ field }) => (
@@ -314,8 +317,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-        </div>
+            /> */}
+        {/* </div> */}
 
 
         <Button 
