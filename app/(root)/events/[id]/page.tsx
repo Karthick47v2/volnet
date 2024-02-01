@@ -30,16 +30,18 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
   return (
     <>
     <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain">
-      <div className="grid grid-cols-1 md:grid-cols-2 2xl:max-w-7xl">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="flex items-center justify-center"> 
         <Image 
           src={event.imageUrl}
           alt="hero image"
           width={1000}
           height={1000}
-          className="h-full min-h-[300px] object-cover object-center"
+          className="min-h-[300px] object-cover object-center"
         />
+        </div>
 
-        <div className="flex w-full flex-col gap-8 p-5 md:p-10">
+        <div className="flex w-full flex-col gap-4 p-5 md:p-10">
           <div className="flex flex-col gap-6">
             <h2 className='h2-bold'>{event.title}</h2>
 
@@ -85,7 +87,7 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
 
           <div className="flex flex-col gap-2">
             <p className="p-bold-20 text-grey-600">Description:</p>
-            <p className="p-medium-16 lg:p-regular-18">{event.description}</p>
+            <p className="p-medium-16 lg:p-regular-18 break-words">{event.description}</p>
             {/* <p className="p-medium-16 lg:p-regular-18 truncate text-primary-500 underline">{event.url}</p> */}
           </div>
         </div>
