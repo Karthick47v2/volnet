@@ -22,6 +22,8 @@ export type IOrderItem = {
   eventTitle: string
   eventId: string
   buyer: string
+  email: string
+  phone_no: string
 }
 
 const OrderSchema = new Schema({

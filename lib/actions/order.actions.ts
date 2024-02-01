@@ -119,6 +119,8 @@ export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEve
           eventTitle: '$event.title',
           eventId: '$event._id',
           buyer: '$buyer.username',
+          email: '$buyer.email',
+          phone_no: '$buyer.phone_no'
         },
       },
       {
