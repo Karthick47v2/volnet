@@ -4,6 +4,13 @@ import { formatDateTime, formatPrice } from '@/lib/utils'
 import { SearchParamProps } from '@/types'
 import { IOrderItem } from '@/lib/database/models/order.model'
 
+function updateTime(initialDateString : any) {
+  const initialDate = new Date(initialDateString);
+  const modifiedDate = new Date(initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
+  return modifiedDate;
+}
+
+
 const Orders = async ({ searchParams }: SearchParamProps) => {
   const eventId = (searchParams?.eventId as string) || ''
   const searchText = (searchParams?.query as string) || ''
@@ -51,7 +58,7 @@ const Orders = async ({ searchParams }: SearchParamProps) => {
                       {/* <td className="min-w-[200px] flex-1 py-4 pr-4">{row.eventTitle}</td> */}
                       <td className="min-w-[150px] py-4">{row.buyer}</td>
                       <td className="min-w-[100px] py-4">
-                        {formatDateTime(row.createdAt).dateTime}
+                        {formatDateTime(updateTime(row.createdAt)).dateTime}
                       </td>
                       {/* <td className="min-w-[100px] py-4 text-right">
                         {formatPrice(row.totalAmount)}

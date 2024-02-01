@@ -12,6 +12,12 @@ type CardProps = {
   hidePrice?: boolean
 }
 
+function updateTime(initialDateString : any) {
+  const initialDate = new Date(initialDateString);
+  const modifiedDate = new Date(initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
+  return modifiedDate;
+}
+
 const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
@@ -50,7 +56,7 @@ const Card = ({ event, hasOrderLink, hidePrice }: CardProps) => {
         </div>}
 
         <p className="p-medium-16 p-medium-18 text-grey-500">
-          {formatDateTime(event.startDateTime).dateTime}
+          {formatDateTime(updateTime(event.startDateTime)).dateTime}
         </p>
 
         <Link href={`/events/${event._id}`}>

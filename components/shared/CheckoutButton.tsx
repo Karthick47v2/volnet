@@ -7,10 +7,16 @@ import React from 'react'
 import { Button } from '../ui/button'
 import Checkout from './Checkout'
 
+function updateTime(initialDateString : any) {
+  const initialDate = new Date(initialDateString);
+  const modifiedDate = new Date(initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
+  return modifiedDate;
+}
+
 const CheckoutButton = ({ event }: { event: IEvent }) => {
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
-  const hasEventFinished = new Date(event.endDateTime) < new Date();
+  const hasEventFinished = new Date(updateTime(event.endDateTime)) < new Date();
 
   return (
     <div className="flex items-center gap-3">
