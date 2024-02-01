@@ -7,6 +7,12 @@ import { SearchParamProps } from '@/types'
 import Image from 'next/image';
 import { getOrdersByUser } from '@/lib/actions/order.actions';
 
+const isUrl = (url) => {
+  // Simple URL validation using a regular expression
+  const urlPattern = /^(https?:\/\/)?([\w.]+)\.([a-z]{2,})(\/.*)?$/i;
+  return urlPattern.test(url);
+};
+
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = await getEventById(id);
 
@@ -25,8 +31,6 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
 
   const isEventJoined = orders!.data.some((order: any) => order.buyer === userId);
 
-  console.log(userId)
-
   return (
     <>
     <section className="flex justify-center bg-primary-50 bg-dotted-pattern bg-contain">
@@ -35,9 +39,12 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
         <Image 
           src={event.imageUrl}
           alt="hero image"
-          width={1000}
-          height={1000}
-          className="min-h-[300px] object-cover object-center"
+          width={800}
+          height={600}
+          layout="responsive"
+          quality={100}
+          priority={true}
+          className="min-h-[300px] object-cover object-center px-10"
         />
         </div>
 
@@ -68,10 +75,11 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
             <div className='flex gap-2 md:gap-3'>
               <Image src="/assets/icons/calendar.svg" alt="calendar" width={32} height={32} />
               <div className="p-medium-16 lg:p-regular-20 flex flex-wrap items-center">
-                <p>
+                <p className="mr-5">
                   {formatDateTime(event.startDateTime).dateOnly} - {' '}
                   {formatDateTime(event.startDateTime).timeOnly}
                 </p>
+                <p className="mr-5"> - </p>
                 <p>
                   {formatDateTime(event.endDateTime).dateOnly} -  {' '}
                   {formatDateTime(event.endDateTime).timeOnly}
@@ -81,13 +89,22 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
 
             <div className="p-regular-20 flex items-center gap-3">
               <Image src="/assets/icons/location.svg" alt="location" width={32} height={32} />
-              <p className="p-medium-16 lg:p-regular-20">{event.location}</p>
+              {isUrl(event.location) ? (
+  <a href={event.location} className="p-medium-16 lg:p-regular-20 text-blue-500">
+    {event.location}
+  </a>
+) : (
+  <p className="p-medium-16 lg:p-regular-20">
+    {event.location}
+  </p>
+)}
+              {/* <p className="p-medium-16 lg:p-regular-20">{event.location}</p> */}
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
             <p className="p-bold-20 text-grey-600">Description:</p>
-            <p className="p-medium-16 lg:p-regular-18 break-words">{event.description}</p>
+            <p className="p-medium-16 lg:p-regular-18 break-words" style={{ whiteSpace: 'pre-line' }}>{event.description}</p>
             {/* <p className="p-medium-16 lg:p-regular-18 truncate text-primary-500 underline">{event.url}</p> */}
           </div>
         </div>
