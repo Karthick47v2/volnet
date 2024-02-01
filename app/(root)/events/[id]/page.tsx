@@ -7,7 +7,7 @@ import { SearchParamProps } from '@/types'
 import Image from 'next/image';
 import { getOrdersByUser } from '@/lib/actions/order.actions';
 
-const isUrl = (url) => {
+const isUrl = (url : any) => {
   // Simple URL validation using a regular expression
   const urlPattern = /^(https?:\/\/)?([\w.]+)\.([a-z]{2,})(\/.*)?$/i;
   return urlPattern.test(url);
