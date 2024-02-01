@@ -13,6 +13,12 @@ const isUrl = (url : any) => {
   return urlPattern.test(url);
 };
 
+function updateTime(initialDateString : any) {
+  const initialDate = new Date(initialDateString);
+  const modifiedDate = new Date(initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000);
+  return modifiedDate;
+}
+
 const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
   const event = await getEventById(id);
 
@@ -30,6 +36,10 @@ const EventDetails = async ({ params: { id }, searchParams }: SearchParamProps) 
   const orders = await getOrdersByUser({ userId, page: searchParams.page as string})
 
   const isEventJoined = orders!.data.some((order: any) => order.buyer === userId);
+
+  event.startDateTime = updateTime(event.startDateTime);
+  event.endDateTime = updateTime(event.endDateTime);
+
 
   return (
     <>
